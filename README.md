@@ -1,6 +1,6 @@
 # Caption Repair
 
-Correct the timing of a UTF-8 SRT file without changing the original. Inspect the file to retrieve its cue list and source fingerprint, then provide either one known source/video timestamp pair for a fixed offset or two pairs to correct a constant linear drift. Timestamps in the tools are integer milliseconds. The resulting SRT is written to the plugin data directory with a unique name.
+Correct the timing of a UTF-8 SRT file without changing the original. Inspect the file to retrieve its cue list and source fingerprint; a subtitle replaced or changed during reading is rejected. Then provide either one known source/video timestamp pair for a fixed offset or two pairs to correct a constant linear drift. Timestamps in the tools are integer milliseconds. The resulting SRT is written to the plugin data directory with a unique name.
 
 If you have a trusted reference SRT containing the same dialogue, the plugin can suggest anchors from uniquely matching phrases of at least three words. Multiple matches use a median-pair linear estimate and report residuals and sampled matches. Suggestions are never applied automatically. Review them against the actual video, especially where a different cut or mismatched captions could mislead the estimate; one match cannot establish drift. A linear transform cannot fix non-linear drift or missing captions. Negative or zero-length resulting cues are rejected instead of silently clamped. Original text and cue order are preserved.
 

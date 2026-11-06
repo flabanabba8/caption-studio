@@ -1,5 +1,7 @@
 """Explicit-anchor SRT retiming; never overwrite the input."""
 import hashlib
+import os
+import stat
 from collections import Counter
 from fractions import Fraction
 from statistics import median
@@ -42,10 +44,18 @@ def read_source(source_path, allowed_root=None, profile_home=None):
     if (any(x in PRIVATE - {'.hermes'} for x in resolved.parts) or protected and not own_output or not resolved.is_file()):
         raise ValueError('Choose a subtitle outside private configuration or an output of this plugin')
     p = resolved
-    with p.open('rb') as f:
+    fd = os.open(p, os.O_RDONLY | getattr(os, 'O_NOFOLLOW', 0) | getattr(os, 'O_NONBLOCK', 0))
+    with os.fdopen(fd, 'rb') as f:
+        before = os.fstat(f.fileno())
+        if not stat.S_ISREG(before.st_mode): raise ValueError('Choose a regular subtitle file')
         raw = f.read(MAX_BYTES + 1)
+        after = os.fstat(f.fileno())
     if len(raw) > MAX_BYTES:
         raise ValueError('SRT exceeds 8 MiB')
+    identity = lambda x: (x.st_dev, x.st_ino, x.st_size, x.st_mtime_ns)
+    current = p.lstat()
+    if identity(before) != identity(after) or identity(after) != identity(current) or not stat.S_ISREG(current.st_mode):
+        raise ValueError('Subtitle changed while reading')
     text = raw.decode('utf-8-sig').replace('\r\n', '\n').replace('\r', '\n')
     blocks = re.split(r'\n[ \t]*\n', text.strip())
     if not text.strip() or len(blocks) > 100000:

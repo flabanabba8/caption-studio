@@ -1,7 +1,9 @@
 import importlib.util
+import os
 from pathlib import Path
 import tempfile
 import unittest
+from unittest.mock import patch
 
 spec = importlib.util.spec_from_file_location('caption_core', Path(__file__).parents[1] / 'core.py')
 core = importlib.util.module_from_spec(spec)
@@ -18,6 +20,19 @@ class CaptionTests(unittest.TestCase):
 
     def tearDown(self):
         self.tmp.cleanup()
+
+    def test_replacement_while_reading_is_rejected(self):
+        replacement = self.root/'replacement.srt'; replacement.write_text('1\n00:00:00,000 --> 00:00:01,000\nChanged\n')
+        original = core.os.fstat; calls = 0
+        def replace(fd):
+            nonlocal calls
+            calls += 1
+            value = original(fd)
+            if calls == 2: os.replace(replacement, self.source)
+            return value
+        with patch.object(core.os, 'fstat', side_effect=replace):
+            with self.assertRaisesRegex(ValueError, 'changed while reading'):
+                self.plugin.inspect(str(self.source))
 
     def test_offset_preserves_input(self):
         before = self.source.read_bytes()
