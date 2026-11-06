@@ -121,7 +121,7 @@ class Captions:
             blocks.append(f"{cue['index']}\n{start} --> {end}{cue['settings']}\n{cue['text']}")
         self.root.mkdir(parents=True, exist_ok=True, mode=0o700)
         out = self.root / f'{uuid.uuid4().hex}.srt'
-        with out.open('x', encoding='utf-8', newline='\n') as f:
+        with os.fdopen(os.open(out, os.O_WRONLY | os.O_CREAT | os.O_EXCL, 0o600), 'w', encoding='utf-8', newline='\n') as f:
             f.write('\n\n'.join(blocks) + '\n')
         return {'output_path': str(out), 'cues': len(cues), 'source_fingerprint': actual,
                 'method': 'offset' if len(anchors) == 1 else 'linear drift', 'scale_numerator': dt, 'scale_denominator': ds}

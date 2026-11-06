@@ -40,6 +40,14 @@ class CaptionTests(unittest.TestCase):
         self.assertIn('00:00:01,500 --> 00:00:02,500', Path(result['output_path']).read_text())
         self.assertEqual(self.source.read_bytes(), before)
 
+    def test_new_caption_output_is_private_under_permissive_umask(self):
+        previous = os.umask(0)
+        try:
+            result = self.plugin.retime(str(self.source), self.fingerprint, [{'source_ms': 0, 'target_ms': 0}])
+            self.assertEqual(Path(result['output_path']).stat().st_mode & 0o777, 0o600)
+        finally:
+            os.umask(previous)
+
     def test_linear_drift(self):
         result = self.plugin.retime(str(self.source), self.fingerprint, [{'source_ms': 1000, 'target_ms': 2000}, {'source_ms': 11000, 'target_ms': 12000 + 1000}])
         output = Path(result['output_path']).read_text()
