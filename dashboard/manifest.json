@@ -1,0 +1,7 @@
+{
+  "name": "caption-repair",
+  "label": "Caption Repair",
+  "version": "0.1.0",
+  "description": "Review and correct subtitle offset and linear drift.",
+  "api": "plugin_api.py"
+}
