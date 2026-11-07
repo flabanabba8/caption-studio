@@ -66,7 +66,7 @@ class CaptionTests(unittest.TestCase):
             self.plugin.retime(str(self.source), self.fingerprint, [{'source_ms': 0, 'target_ms': 0}])
 
     def test_own_hermes_output_can_be_reopened_but_other_private_files_cannot(self):
-        private = self.root / '.hermes'
+        private = self.root / '.HeRmEs'
         plugin = core.Captions(private / 'plugin-data' / 'caption-repair')
         result = plugin.retime(str(self.source), self.fingerprint, [{'source_ms': 0, 'target_ms': 100}])
         self.assertEqual(plugin.inspect(result['output_path'])['total'], 2)

@@ -36,12 +36,12 @@ def format_stamp(value):
 
 def read_source(source_path, allowed_root=None, profile_home=None):
     p = Path(source_path).expanduser()
-    if p.is_symlink() or any(x in PRIVATE - {'.hermes'} for x in p.parts):
+    if p.is_symlink() or any(x.casefold() in PRIVATE - {'.hermes'} for x in p.parts):
         raise ValueError('Private paths and symlink inputs are unsupported')
     resolved = p.resolve(strict=True)
     own_output = allowed_root is not None and resolved.is_relative_to(Path(allowed_root).resolve())
-    protected = '.hermes' in p.parts or '.hermes' in resolved.parts or (profile_home is not None and resolved.is_relative_to(Path(profile_home).resolve()))
-    if (any(x in PRIVATE - {'.hermes'} for x in resolved.parts) or protected and not own_output or not resolved.is_file()):
+    protected = any(x.casefold() == '.hermes' for x in p.parts) or any(x.casefold() == '.hermes' for x in resolved.parts) or (profile_home is not None and resolved.is_relative_to(Path(profile_home).resolve()))
+    if (any(x.casefold() in PRIVATE - {'.hermes'} for x in resolved.parts) or protected and not own_output or not resolved.is_file()):
         raise ValueError('Choose a subtitle outside private configuration or an output of this plugin')
     p = resolved
     fd = os.open(p, os.O_RDONLY | getattr(os, 'O_NOFOLLOW', 0) | getattr(os, 'O_NONBLOCK', 0))
@@ -79,19 +79,19 @@ def read_source(source_path, allowed_root=None, profile_home=None):
 class Captions:
     def __init__(self, root):
         self.root = Path(root).resolve()
-        self.profile_home = self.root.parent.parent if self.root.parent.name == 'plugin-data' else None
+        self.profile_home = self.root.parent.parent if self.root.parent.name.casefold() == 'plugin-data' else None
 
     def inspect(self, source_path, offset=0, limit=20, allow_profile_captions=False):
         if type(offset) is not int or type(limit) is not int or offset < 0 or not 1 <= limit <= 100:
             raise ValueError('Invalid page bounds')
         if type(allow_profile_captions) is not bool: raise ValueError('allow_profile_captions must be boolean')
-        allowed = self.root.parent if allow_profile_captions and self.root.parent.name == 'plugin-data' and Path(source_path).suffix.lower() == '.srt' else self.root
+        allowed = self.root.parent if allow_profile_captions and self.root.parent.name.casefold() == 'plugin-data' and Path(source_path).suffix.lower() == '.srt' else self.root
         fingerprint, cues = read_source(source_path, allowed, self.profile_home)
         return {'fingerprint': fingerprint, 'total': len(cues), 'offset': offset, 'cues': cues[offset:offset + limit]}
 
     def retime(self, source_path, fingerprint, anchors, allow_profile_captions=False):
         if type(allow_profile_captions) is not bool: raise ValueError('allow_profile_captions must be boolean')
-        allowed = self.root.parent if allow_profile_captions and self.root.parent.name == 'plugin-data' and Path(source_path).suffix.lower() == '.srt' else self.root
+        allowed = self.root.parent if allow_profile_captions and self.root.parent.name.casefold() == 'plugin-data' and Path(source_path).suffix.lower() == '.srt' else self.root
         actual, cues = read_source(source_path, allowed, self.profile_home)
         if actual != fingerprint:
             raise ValueError('Source changed; inspect it again')
@@ -130,7 +130,7 @@ class Captions:
     def suggest_alignment(self, source_path, reference_path, allow_profile_captions=False):
         if type(allow_profile_captions) is not bool: raise ValueError('allow_profile_captions must be boolean')
         def read(path):
-            allowed = self.root.parent if allow_profile_captions and self.root.parent.name == 'plugin-data' and Path(path).suffix.lower() == '.srt' else self.root
+            allowed = self.root.parent if allow_profile_captions and self.root.parent.name.casefold() == 'plugin-data' and Path(path).suffix.lower() == '.srt' else self.root
             return read_source(path, allowed, self.profile_home)
         source_sha, source = read(source_path)
         reference_sha, reference = read(reference_path)

@@ -1,5 +1,7 @@
 # Verification
 
+- Mixed-case protected-directory fixtures passed on Linux and native Windows; no real credentials were used. This is not a full platform or publication audit.
+
 - Twelve Python tests passed in the Hermes-compatible overlay, including owner-only POSIX output permissions under a permissive umask, offset and drift correction, profile boundaries and Desktop API behavior. Hermes plugin validation passed without warnings.
 - A synthetic SRT handoff from YouTube Video Studio was inspected, retimed and reinspected after the permission change. An earlier tutorial-caption offset integration and Desktop flow passed.
 - Native Windows Python 3.14 passed one synthetic SRT offset correction. Windows ACL behavior and the Desktop UI were not tested.
