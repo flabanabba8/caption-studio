@@ -1,5 +1,7 @@
 # Verification
 
+- A standalone headless browser fixture with approximate theme variables was inspected at 375 px. The initially disabled control now appears distinct and the page had no horizontal overflow; the Desktop flow test passed. This is not native Hermes Desktop or a complete accessibility review.
+
 - Mixed-case protected-directory fixtures passed on Linux and native Windows; no real credentials were used. This is not a full platform or publication audit.
 
 - Twelve Python tests passed in the Hermes-compatible overlay, including owner-only POSIX output permissions under a permissive umask, offset and drift correction, profile boundaries and Desktop API behavior. Hermes plugin validation passed without warnings.
