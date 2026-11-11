@@ -1,5 +1,7 @@
 # Caption Studio
 
+![Caption Studio: create, sync and review captions](assets/thumbnail.jpg)
+
 Create captions for interviews, tutorials, meetings or other recordings, then
 listen, check the words and adjust their timing. You can also review and repair
 an existing SRT. Choose a speech recognizer that fits your computer, privacy and
