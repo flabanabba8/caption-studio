@@ -20,8 +20,13 @@ const tmp = fs.mkdtempSync(path.join(os.tmpdir(), 'caption-repair-ui-'))
       platform: 'node', format: 'cjs', outfile: output, nodePaths: [modules],
       alias: { '@hermes/plugin-sdk': path.join(__dirname, 'sdk_stub.js') } })
     const result = await require(output).run(assert, document)
+    const audioOutput = path.join(tmp, 'audio-flow.cjs')
+    esbuild.buildSync({ entryPoints: [path.join(__dirname, 'audio_desktop_flow.js')], bundle: true,
+      platform: 'node', format: 'cjs', outfile: audioOutput, nodePaths: [modules] })
+    const audioResult = await require(audioOutput).run(assert, document)
+    const generationResult = await require(audioOutput).runCreate(assert, document)
     assert.equal(timers.size, 0, 'Plugin polling must stop on unmount')
-    console.log(JSON.stringify(result))
+    console.log(JSON.stringify({manual:result,audio:audioResult,generation:generationResult}))
   } finally { dom.window.close(); esbuild.stop(); fs.rmSync(tmp, { recursive: true, force: true }) }
 // React's bundled browser scheduler can retain a Node MessagePort after jsdom
 // closes. Plugin interval teardown is asserted above before the test process exits.

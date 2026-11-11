@@ -1,5 +1,6 @@
 import { ROUTES_AREA, SIDEBAR_NAV_AREA } from '@hermes/plugin-sdk'
 import { createElement as h, useState } from 'react'
+import { AudioReview } from './audio-review.js'
 
 const field = { padding: '8px 10px', border: '1px solid var(--ui-stroke-secondary)', borderRadius: 7, background: 'var(--ui-bg-tertiary)', color: 'var(--ui-text-primary)' }
 const card = { padding: 16, border: '1px solid var(--ui-stroke-secondary)', borderRadius: 12, display: 'grid', gap: 10 }
@@ -8,6 +9,7 @@ const button = (text, onClick, disabled = false, props = {}) => h('button', { st
 const label = (text, input) => h('label', null, text, input)
 
 function Captions({ ctx }) {
+  const [mode,setMode]=useState('create')
   const [source, setSource] = useState(''), [reference, setReference] = useState(''), [allowProfile, setAllowProfile] = useState(false)
   const [inspection, setInspection] = useState(null), [suggestion, setSuggestion] = useState(null), [output, setOutput] = useState(null)
   const [source1, setSource1] = useState(''), [target1, setTarget1] = useState(''), [source2, setSource2] = useState(''), [target2, setTarget2] = useState('')
@@ -28,12 +30,14 @@ function Captions({ ctx }) {
   }
   const num = (name, value, setter) => label(name, h('input', { style: { ...field, display: 'block' }, type: 'number', min: 0, step: 1, value, disabled: busy, onChange: e => setter(e.target.value) }))
   return h('main', { style: { maxWidth: 1000, padding: 28, margin: 'auto', display: 'grid', gap: 20, color: 'var(--ui-text-primary)' } },
-    h('header', null, h('h1', null, 'Caption Repair'), h('p', null, 'Review timestamps and write a separate corrected SRT.')),
+    h('header', null, h('h1', null, 'Caption Studio'), h('p', null, 'Create captions from a recording, check the words, and keep them in time.')),
+    label('What would you like to do?',h('select',{'aria-label':'Caption task',value:mode,disabled:busy,style:field,onChange:e=>setMode(e.target.value)},h('option',{value:'create'},'Create new captions'),h('option',{value:'repair'},'Review or repair existing captions'))),
     error && h('p', { role: 'alert', style: card }, error),
-    h('form', { style: card, onSubmit: e => { e.preventDefault(); task(() => inspect(source)) } },
+    mode==='repair'&&h('form', { style: card, onSubmit: e => { e.preventDefault(); task(() => inspect(source)) } },
       label('Source SRT on the Hermes host', h('input', { style: { ...field, display: 'block', width: '100%' }, value: source, disabled: busy, onChange: e => { setSource(e.target.value); setInspection(null); setSuggestion(null); setOutput(null) } })),
       label('Allow selected SRT files inside this profile’s plugin data', h('input', { type: 'checkbox', checked: allowProfile, disabled: busy, onChange: e => { setAllowProfile(e.target.checked); setInspection(null); setSuggestion(null); setOutput(null) } })),
       button('Inspect captions', undefined, busy || !source.trim(), { type: 'submit' })),
+    h(AudioReview,{ctx,source,allowProfile,onRunning:setBusy,mode}),
     inspection && h('section', { style: { display: 'grid', gap: 14 }, 'aria-label': 'Caption timing' },
       h('div', { style: card }, h('h2', null, 'Source cues'), h('p', null, `${inspection.total} cues · first ${inspection.cues.length} shown`),
         h('ol', null, ...inspection.cues.map((cue, i) => h('li', { key: i }, `${cue.start_ms}–${cue.end_ms} ms · ${cue.text}`)))),
@@ -62,7 +66,7 @@ function Captions({ ctx }) {
         button('Inspect corrected copy', () => task(() => inspect(output.output_path)), busy))))
 }
 
-export default { id: 'caption-repair', name: 'Caption Repair', register(ctx) {
-  ctx.register({ id: 'page', area: ROUTES_AREA, data: { path: '/caption-repair' }, render: () => h(Captions, { ctx }) })
-  ctx.register({ id: 'nav', area: SIDEBAR_NAV_AREA, data: { path: '/caption-repair', label: 'Caption Repair', codicon: 'comment-discussion' } })
+export default { id: 'caption-studio', name: 'Caption Studio', register(ctx) {
+  ctx.register({ id: 'page', area: ROUTES_AREA, data: { path: '/caption-studio' }, render: () => h(Captions, { ctx }) })
+  ctx.register({ id: 'nav', area: SIDEBAR_NAV_AREA, data: { path: '/caption-studio', label: 'Caption Studio', codicon: 'comment-discussion' } })
 } }

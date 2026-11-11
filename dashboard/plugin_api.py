@@ -18,7 +18,7 @@ router = APIRouter()
 def action(body: dict):
     operation, arguments = body.get('operation'), body.get('arguments', {})
     if operation not in package.TOOLS or not isinstance(arguments, dict):
-        raise HTTPException(400, 'Unknown Caption Repair operation')
+        raise HTTPException(400, 'Unknown Caption Studio operation')
     result = json.loads(package.invoke(operation, arguments))
     if 'error' in result:
         raise HTTPException(400, result['error'])

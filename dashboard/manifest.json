@@ -1,7 +1,7 @@
 {
-  "name": "caption-repair",
-  "label": "Caption Repair",
-  "version": "0.1.0",
-  "description": "Review and correct subtitle offset and linear drift.",
+  "name": "caption-studio",
+  "label": "Caption Studio",
+  "version": "0.4.6",
+  "description": "Create captions from recordings, listen and review the words and timing, or repair an existing subtitle file.",
   "api": "plugin_api.py"
 }

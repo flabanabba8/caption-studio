@@ -1,0 +1,102 @@
+{
+  "curated": "2026-11-10",
+  "status": "source reviewed; blind check-and-repair covered by focused offline fixture tests, no live recognizer or listening run",
+  "sources": [
+    {
+      "package_path": "README.md",
+      "sha256": "4d33b374ce6b7a3df40cfc832605d2f4385b99d64a611f57ab85e6ca46e980d2"
+    },
+    {
+      "package_path": "VERIFICATION.md",
+      "sha256": "1cf49c4d651e4e91db46326cba5330da245d02d2ff0bd72a3a02eda7f61aeb08"
+    },
+    {
+      "package_path": "__init__.py",
+      "sha256": "f2a39ac34649a2a0f145d7237764655d1c0c6e7f8f900c81d1c60c426ae0ac22"
+    },
+    {
+      "package_path": "alignment.py",
+      "sha256": "9980d3cb6801137d01ce03ea8fce76f90062eef80ce61a1187a677bf0c05a7e6"
+    },
+    {
+      "package_path": "audio.py",
+      "sha256": "130b5aa057b436ad929bfc7ca8f9f96b4888501a11d7352f8eeb60fa15ea5841"
+    },
+    {
+      "package_path": "core.py",
+      "sha256": "43845d4bd0c655cd19e3abab699c4fcbfdb58a1724887ab846a73b0cbdeed186"
+    },
+    {
+      "package_path": "dashboard/plugin_api.py",
+      "sha256": "131c1e9df83be22a69c8ae256fc0d6dc01a6ac9e5b0edad9f4ea5e4e99366187"
+    },
+    {
+      "package_path": "examples/transformers_asr.py",
+      "sha256": "1e2ce44b607f4e4f6d48fe47efe5d1ff606f3495a2adb88d2003faa78bd86a4f"
+    },
+    {
+      "package_path": "plugin.yaml",
+      "sha256": "bdd155c86395eaa60b0c227d89d2279463ce528996ef8a9e992a65c9f40b85f8"
+    },
+    {
+      "package_path": "recognizers.py",
+      "sha256": "05d6267afebc846ca7b624c024ea26d84d703708af0c78c5a18c8d4f8941ce50"
+    },
+    {
+      "package_path": "skills/repair-captions/SKILL.md",
+      "sha256": "fca3bf3664739db4ce76c6510e00e7f8c976a38d16164c3f922f4e2b0cd50360"
+    },
+    {
+      "package_path": "tests/test_audio.py",
+      "sha256": "6008f789aac59bdcb430dc7568ef057db04eb7b9e0d525bf0f772d4b14d92dad"
+    },
+    {
+      "package_path": "tests/test_captions.py",
+      "sha256": "12a7300a1865bb453cc5e74db484393c71cd556f5705be43d7d40c4943e52d20"
+    },
+    {
+      "package_path": "tests/test_dashboard.py",
+      "sha256": "5abbcab781d82ed3b859df2eca7059ba64291630f8f4833b6c1250cdb8c09486"
+    },
+    {
+      "package_path": "tests/test_generate.py",
+      "sha256": "ad6efc650394e771dde4ec04d0bf760d5a1b72c015220d2e9f383627a09930d6"
+    },
+    {
+      "package_path": "tests/test_suggest.py",
+      "sha256": "bff48dcf806ead9479100d237575bb70fc39dc74d5b1321b91a466bcc8faa83c"
+    }
+  ],
+  "quality_review": {
+    "date": "2026-11-10",
+    "method": "main-session source/contract review; actual registration capture; focused offline/mocked tests recorded separately",
+    "scope": [
+      "setup choices",
+      "worked task flow",
+      "failure diagnosis",
+      "acceptance limits",
+      "schema alignment"
+    ],
+    "live_scope": "No new production pipeline, model build, paid speech, install or publication. ModLab UM/REA help calls exercised actual installed CLIs.",
+    "blind_repair_0_4_0": "2026-11-10: propose/apply_proposed added; offline saved-word-timing fixtures only; thresholds are an unvalidated conservative judgement",
+    "blind_repair_0_4_1": "2026-11-10: common-word swap in fully matched context is clear; offline fixtures plus one real blind run; thresholds not calibrated"
+  },
+  "rebrand_and_generation": {
+    "name": "Caption Studio",
+    "former_name": "Caption Repair",
+    "version": "0.3.0",
+    "source_files": {
+      "__init__.py": "ba269aa9c74089ffb3afe4a0bc175f8a8d48e346b6aa0562532a42069f1d235a",
+      "audio.py": "afe196a35c76740b7ca6183493a879aac4b43095045fd5b5ed95377bfb1d9f1f",
+      "plugin.yaml": "0df04c4e1c95f316a7e4167c7b677cf4f504025dd731780a2b9529607080b236",
+      "README.md": "90e3aa9f589f9625d652e86d77d84d99ececd29d834f490ea6827aa31543984c",
+      "llmwiki/creation.md": "f143e0c4ab84fdb0b19a293e5629d05d9946c23ad8f57b16298db1f431179728"
+    },
+    "checks": "28 Python tests and creation/repair/manual React flows; no universal backend or human listening claim"
+  },
+  "privacy_scope": {
+    "credentials_read": false,
+    "selected_installed_runtime_source_inspected_read_only": true,
+    "private_installs_modified": false
+  }
+}

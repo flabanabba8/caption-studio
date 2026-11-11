@@ -1,10 +1,24 @@
-name: caption-repair
-version: "0.1.0"
-description: "Repair subtitle offset and drift from known timestamp anchors."
-author: "Caption Repair contributors"
+name: caption-studio
+version: "0.4.6"
+description: "Create captions from recordings, review their words and timing, and repair existing subtitles using your chosen speech tools."
+author: "Caption Studio contributors"
 license: GPL-3.0-or-later
 requires_hermes: ">=0.22.0"
 provides_tools:
+  - captions_generate
   - captions_inspect
   - captions_retime
   - captions_suggest_alignment
+  - captions_recognizer_options
+  - captions_analyse_audio
+  - captions_audio_status
+  - captions_audio_review
+  - captions_audio_propose
+  - captions_audio_preview
+  - captions_audio_export
+  - captions_audio_cancel
+optional_env:
+  - CAPTION_STUDIO_ASR_KEY
+  - CAPTION_REPAIR_ASR_KEY
+config_schema:
+  asr_api_key: {type: secret, env: CAPTION_STUDIO_ASR_KEY, required: false, label: "Selected speech service API key", description: "Optional. Used only when you explicitly select an HTTP recognizer with use_api_key. Local commands and imported transcripts need no key. Never paste keys into tool arguments."}

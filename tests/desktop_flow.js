@@ -28,6 +28,12 @@ export async function run(assert, document) {
   })
   try {
     await act(async () => root.render(contributions.find(c => c.area === 'routes').render()))
+    await act(async () => {
+      const task=document.querySelector('[aria-label="Caption task"]')
+      assert.equal(task.value,'create')
+      Object.getOwnPropertyDescriptor(window.HTMLSelectElement.prototype,'value').set.call(task,'repair')
+      task.dispatchEvent(new window.Event('change',{bubbles:true}))
+    })
     await change(field('Source SRT on the Hermes host'), '/tmp/source.srt')
     await act(async () => field('Allow selected SRT files inside this profile’s plugin data').click())
     await act(async () => document.querySelector('form').dispatchEvent(new window.Event('submit', { bubbles:true, cancelable:true })))
